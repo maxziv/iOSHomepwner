@@ -43,6 +43,34 @@
     return YES;
 }
 
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    UIImageView *iv = [[UIImageView alloc] initWithImage:nil];
+    iv.contentMode = UIViewContentModeScaleAspectFit;
+    
+    iv.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.view addSubview:iv];
+    
+    self.imageView = iv;
+    
+    NSDictionary *nameMap = @{@"imageView":self.imageView,
+                             @"dateLabel": self.dateLabel,
+                             @"toolBar": self.toolBar};
+    
+    NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[imageView]|" options:0 metrics:nil views:nameMap];
+    
+    
+    NSArray *verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[dateLabel]-[imageView]-[toolBar]" options:0 metrics:nil views:nameMap];
+    
+    [self.view addConstraints:horizontalConstraints];
+    
+    [self.view addConstraints:verticalConstraints];
+}
+
+
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
@@ -117,13 +145,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     item.itemName = self.nameField.text;
     item.serialNumber = self.serialField.text;
     item.valueInDollars = [self.valueField.text intValue];
-}
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning

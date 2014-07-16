@@ -67,9 +67,12 @@
                     <rect key="frame" x="20" y="223" width="270" height="276"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VNX-yK-NOJ">
-                    <rect key="frame" x="-5" y="524" width="320" height="44"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VNX-yK-NOJ">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="N7t-qe-L6S"/>
+                    </constraints>
                     <items>
                         <barButtonItem title="Item" systemItem="camera" id="DJw-Az-hmX">
                             <connections>
@@ -80,6 +83,11 @@
                 </toolbar>
             </subviews>
             <color key="backgroundColor" red="0.92501698369565222" green="0.92501698369565222" blue="0.92501698369565222" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="VNX-yK-NOJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1za-05-fXV"/>
+                <constraint firstAttribute="trailing" secondItem="VNX-yK-NOJ" secondAttribute="trailing" id="AzB-TP-2hE"/>
+                <constraint firstAttribute="bottom" secondItem="VNX-yK-NOJ" secondAttribute="bottom" id="bJ8-XA-9Q6"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
