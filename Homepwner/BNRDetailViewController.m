@@ -9,7 +9,7 @@
 #import "BNRDetailViewController.h"
 #import "BNRImageStore.h"
 
-@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIPopoverControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialField;
 @property (weak, nonatomic) IBOutlet UITextField *valueField;
@@ -17,11 +17,19 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraButton;
-
+@property (strong, nonatomic) UIPopoverController *imagePickerPopover;
 @end
 
 @implementation BNRDetailViewController
 - (IBAction)takePicture:(id)sender {
+    
+    /*if([self.imagePickerPopover isPopoverVisible])
+    {
+        [self.imagePickerPopover  dismissPopoverAnimated:YES];
+        self.imagePickerPopover = nil;
+        return;
+    }*/
+    
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     
     // If the device ahs a camera, take a picture, otherwise,
@@ -35,10 +43,26 @@
     [imagePicker setAllowsEditing:YES];
     imagePicker.delegate = self;
     
+    
+   /* if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)//isIpad
+    {
+        self.imagePickerPopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+        self.imagePickerPopover.delegate = self;
+        
+        [self.imagePickerPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+    else{
+        [self presentViewController:imagePicker animated:YES completion:NULL];
+    }*/
     // Place image picker on the screen
     [self presentViewController:imagePicker animated:YES completion:NULL];
 }
 
+- (void) popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    NSLog(@"User dismissed popover");
+    self.imagePickerPopover = nil;
+}
 - (BOOL) textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
