@@ -9,7 +9,7 @@
 #import "BNRDetailViewController.h"
 #import "BNRImageStore.h"
 
-@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialField;
 @property (weak, nonatomic) IBOutlet UITextField *valueField;
@@ -47,6 +47,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.nameField.delegate = self;
+    self.serialField.delegate = self;
+    self.valueField.delegate = self; //dismissing keyboard
     UIImageView *iv = [[UIImageView alloc] initWithImage:nil];
     iv.contentMode = UIViewContentModeScaleAspectFit;
     
@@ -93,7 +96,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     // you must call this dismiss method
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
