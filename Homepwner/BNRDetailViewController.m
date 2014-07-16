@@ -31,6 +31,7 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
     
+    [imagePicker setAllowsEditing:YES];
     imagePicker.delegate = self;
     
     // Place image picker on the screen
@@ -84,7 +85,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         // Delete the old image
     
     // Get picked image from info dictionary
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    UIImage *image = info[UIImagePickerControllerEditedImage];
     
     // Store the image in the BNRImageStore for this key
     [[BNRImageStore sharedStore] setImage:image forKey:self.item.itemKey];
