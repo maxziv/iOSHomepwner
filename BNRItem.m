@@ -17,12 +17,37 @@
 
 @implementation BNRItem
 
+- (void) encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.itemName forKey:@"itemName"];
+    [aCoder encodeObject:self.serialNumber forKey:@"serialNumber"];
+    [aCoder encodeObject:self.dateCreated forKey:@"dateCreated"];
+    [aCoder encodeObject:self.itemKey forKey:@"itemKey"];
+    
+    [aCoder encodeInt:self.valueInDollars forKey:@"valueInDollars"];
+}
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        _itemName = [aDecoder decodeObjectForKey:@"itemName"];
+        _serialNumber = [aDecoder decodeObjectForKey:@"serialNumber"];
+        _dateCreated = [aDecoder decodeObjectForKey:@"dateCreated"];
+        _itemKey = [aDecoder decodeObjectForKey:@"itemKey"];
+        
+        _valueInDollars = [aDecoder decodeIntForKey:@"valueInDollars"];
+    }
+    return self;
+}
+
+
 + (id)randomItem
 {
     // Create an array of three adjectives
-    NSArray *randomAdjectiveList = @[@"Fluffy", @"Rusty", @"Shiny"];
+    NSArray *randomAdjectiveList = @[@"Fluffy", @"Rusty", @"Shiny", @"Nasty", @"Sacred", @"Poor Man's", @"Magic", @"Arcane", @"Sage's"];
     // Create an array of three nouns
-    NSArray *randomNounList = @[@"Bear", @"Spork", @"Mac"];
+    NSArray *randomNounList = @[@"Bear", @"Spork", @"Mac", @"Cup", @"Book", @"Bible", @"iPhone", @"Mask", @"Blade", @"Chopsticks", @"Boots", @"Relic"];
     // Get the index of a random adjective/noun from the lists
     // Note: The % operator, called the modulo operator, gives
     // you the remainder. So adjectiveIndex is a random number
@@ -35,6 +60,8 @@
                                 randomAdjectiveList[adjectiveIndex],
                                 randomNounList[nounIndex]];
     int randomValue = rand() % 100;
+    if(rand()%2 == 1)
+        randomValue += 1024;
     NSString *randomSerialNumber = [NSString stringWithFormat:@"%c%c%c%c%c",
                                         '0' + rand() % 10,
                                         'A' + rand() % 26,

@@ -9,6 +9,7 @@
 #import "BNRItemStore.h"
 #import "BNRItem.h"
 #import "BNRImageStore.h"
+
 @interface BNRItemStore ()
 
 @property (nonatomic) NSMutableArray *privateItems;
@@ -17,38 +18,15 @@
 
 @implementation BNRItemStore
 
-- (void) removeItem:(BNRItem *) item
-{
-    NSString *key = item.itemKey;
-    [[BNRImageStore sharedStore] deleteImageForKey:key];
-    [self.privateItems removeObjectIdenticalTo:item];
-}
-
-- (void)moveItemAtIndex:(NSInteger)fromIndex
-                toIndex:(NSInteger)toIndex
-{
-    if (fromIndex == toIndex) {
-        return;
-    }
-    // Get pointer to object being moved so you can re-insert it
-    BNRItem *item = self.privateItems[fromIndex];
-    
-    // Remove item from array
-    [self.privateItems removeObjectAtIndex:fromIndex];
-    
-    // Insert item in array at new location
-    [self.privateItems insertObject:item atIndex:toIndex];
-}
-
 + (instancetype)sharedStore
 {
     static BNRItemStore *sharedStore;
-
+    
     // Do I need to create a sharedStore?
     if (!sharedStore) {
         sharedStore = [[self alloc] initPrivate];
     }
-
+    
     return sharedStore;
 }
 
@@ -67,9 +45,35 @@
 {
     self = [super init];
     if (self) {
-        _privateItems = [[NSMutableArray alloc] init];
+        NSString *path = [self itemArchivePath];
+        _privateItems = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        
+        // If the array hadn't been saved previously, create a new empty one
+        if (!_privateItems) {
+            _privateItems = [[NSMutableArray alloc] init];
+        }
     }
     return self;
+}
+
+- (NSString *)itemArchivePath
+{
+    // Make sure that the first argument is NSDocumentDirectory
+    // and not NSDocumentationDirectory
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    // Get the one document directory from that list
+    NSString *documentDirectory = [documentDirectories firstObject];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"items.archive"];
+}
+
+- (BOOL)saveChanges
+{
+    NSString *path = [self itemArchivePath];
+    
+    // Returns YES on success
+    return [NSKeyedArchiver archiveRootObject:self.privateItems toFile:path];
 }
 
 - (NSArray *)allItems
@@ -80,10 +84,36 @@
 - (BNRItem *)createItem
 {
     BNRItem *item = [BNRItem randomItem];
-
+    
     [self.privateItems addObject:item];
-
+    
     return item;
+}
+
+- (void)removeItem:(BNRItem *)item
+{
+    NSString *key = item.itemKey;
+    if (key) {
+        [[BNRImageStore sharedStore] deleteImageForKey:key];
+    }
+    
+    [self.privateItems removeObjectIdenticalTo:item];
+}
+
+- (void)moveItemAtIndex:(NSInteger)fromIndex
+                toIndex:(NSInteger)toIndex
+{
+    if (fromIndex == toIndex) {
+        return;
+    }
+    // Get pointer to object being moved so you can re-insert it
+    BNRItem *item = self.privateItems[fromIndex];
+    
+    // Remove item from array
+    [self.privateItems removeObjectAtIndex:fromIndex];
+    
+    // Insert item in array at new location
+    [self.privateItems insertObject:item atIndex:toIndex];
 }
 
 @end

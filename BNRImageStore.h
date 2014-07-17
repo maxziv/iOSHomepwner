@@ -11,6 +11,7 @@
 @interface BNRImageStore : NSObject
 
 + (instancetype)sharedStore;
+- (BOOL)saveChanges;
 
 - (void)setImage:(UIImage *)image forKey:(NSString *)key;
 - (UIImage *)imageForKey:(NSString *)key;
